@@ -21,7 +21,7 @@ export default function App() {
   }
 
   function addTrack(track) {
-    let tracks = playlistTracks;
+    let tracks = [...playlistTracks];
     if (playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
       return;
     }
@@ -30,7 +30,7 @@ export default function App() {
   }
 
   function removeTrack(track) {
-    let tracks = playlistTracks;
+    let tracks = [...playlistTracks];
     tracks = tracks.filter((currentTrack) => currentTrack.id !== track.id);
     setPlaylistTracks(tracks);
   }
