@@ -40,12 +40,8 @@ export default function App() {
   }
 
   async function savePlaylist(e) {
-    e.preventDefault();
-    //falta
-    /* alert("this method is linked to the button correctly"); */
     const trackUris = playlistTracks.map((track) => track.uri);
-    setPlaylistTracks(trackUris);
-    const newPlayList = await Spotify.savePlayList(playListName, trackUris);
+    await Spotify.savePlayList(playListName, trackUris);
     setPlayListName("New Playlist");
     setPlaylistTracks([]);
   }

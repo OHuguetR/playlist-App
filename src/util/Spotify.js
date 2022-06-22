@@ -1,5 +1,5 @@
 let accessToken;
-const clientId = "58de24842ee548a8873a21968d679d37";
+const clientId = "b1f6dbbc7a2f4c9dac2dc6c8b16845f2";
 const redirectUri = "http://localhost:3000";
 const Spotify = {
   initApp() {
@@ -46,46 +46,37 @@ const Spotify = {
     }));
   },
   async savePlayList(name, trackUris) {
-    if (!name || trackUris.length) {
+    if (!name || !trackUris.length) {
       return;
     }
     const accessToken = Spotify.getAccessToken();
     const headers = {
       Authorization: `Bearer ${accessToken}`,
     };
-    let userId;
-    const request = await fetch("https://api.spotify.com/v1/me", {
+
+    const userIdRequest = await fetch("https://api.spotify.com/v1/me", {
       headers: headers,
     });
-    const jsonResponse = await request.json();
-    userId = jsonResponse.id;
-    const responseTwo = await fetch(
+    const userIdJson = await userIdRequest.json();
+    const userId = userIdJson.id;
+
+    const newPlaylistRequest = await fetch(
       `https://api.spotify.com/v1/users/${userId}/playlists`,
       {
         headers: headers,
         method: "POST",
         body: JSON.stringify({ name: name }),
-        /* mode: "cors",
-        credentials: "include",
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-        }, */
       }
     );
-    const responseTwoJason = await responseTwo.json();
-    console.log(responseTwoJason);
-    const playListId = responseTwoJason.id;
-    console.log(playListId);
-    console.log(trackUris);
+    const newPlaylistParsedResponse = await newPlaylistRequest.json();
+    const playListId = newPlaylistParsedResponse.id;
+
     try {
-      const responseThree = await fetch(
-        `https://api.spotify.com/v1/me/v1/users/${userId}/playlists/${playListId}/tracks`,
-        {
-          headers: headers,
-          method: "POST",
-          body: JSON.stringify({ uris: trackUris }),
-        }
-      );
+      await fetch(`https://api.spotify.com/v1/playlists/${playListId}/tracks`, {
+        headers: headers,
+        method: "POST",
+        body: JSON.stringify({ uris: trackUris }),
+      });
     } catch (error) {
       throw alert;
     }
