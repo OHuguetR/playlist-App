@@ -4,15 +4,20 @@ import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
 import "./App.css";
 import Spotify from "../../util/Spotify";
+import { useEffect } from "react";
 
 export default function App() {
-  const [searchResults, setSerchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [playListName, setPlayListName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
 
+  useEffect(() => {
+    Spotify.initApp();
+  }, [])
+  
   async function search(term) {
     const searches = await Spotify.search(term);
-    setSerchResults(searches);
+    setSearchResults(searches);
   }
 
   function addTrack(track) {
